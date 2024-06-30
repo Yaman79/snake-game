@@ -1,0 +1,68 @@
+document.addEventListener('DOMContentLoaded', () => {
+    const gameArea = document.getElementById('game-area');
+    const snakeElement = document.getElementById('snake');
+    const foodElement = document.getElementById('food');
+
+    let snakeX = 0;
+    let snakeY = 0;
+    let foodX = 0;
+    let foodY = 0;
+    let dx = 20;
+    let dy = 0;
+    let snake = [{x: snakeX, y: snakeY}];
+
+    function moveSnake() {
+        snakeX += dx;
+        snakeY += dy;
+        checkCollision();
+        snake.unshift({x: snakeX, y: snakeY});
+        if (snakeX === foodX && snakeY === foodY) {
+            placeFood();
+        } else {
+            snake.pop();
+        }
+        updateSnake();
+    }
+
+    function updateSnake() {
+        snakeElement.style.left = snakeX + 'px';
+        snakeElement.style.top = snakeY + 'px';
+    }
+
+    function placeFood() {
+        foodX = Math.floor(Math.random() * 20) * 20;
+        foodY = Math.floor(Math.random() * 20) * 20;
+        foodElement.style.left = foodX + 'px';
+        foodElement.style.top = foodY + 'px';
+    }
+
+    function checkCollision() {
+        if (snakeX < 0 || snakeY < 0 || snakeX >= 400 || snakeY >= 400) {
+            gameOver();
+        }
+    }
+
+    function gameOver() {
+        alert('Game Over!');
+        window.location.reload();
+    }
+
+    placeFood();
+    setInterval(moveSnake, 200);
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowUp' && dy === 0) {
+            dx = 0;
+            dy = -20;
+        } else if (e.key === 'ArrowDown' && dy === 0) {
+            dx = 0;
+            dy = 20;
+        } else if (e.key === 'ArrowLeft' && dx === 0) {
+            dx = -20;
+            dy = 0;
+        } else if (e.key === 'ArrowRight' && dx === 0) {
+            dx = 20;
+            dy = 0;
+        }
+    });
+});
